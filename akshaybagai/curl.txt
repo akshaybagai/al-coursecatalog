@@ -1,0 +1,2 @@
+#Term: Fall 2016-2017 , Distribution area: Any, Subject: Any, Catalog number: Any, Level: Any, Instructor: Any, Title: Any, Days: Any, Times: Any
+curl -o sample.html https://registrar.princeton.edu/course-offerings/search_results.xml?term=1172
