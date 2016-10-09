@@ -1,34 +1,56 @@
 $(document).ready(function(){
     document.getElementById('target').innerHTML = data;
 
-    var titles = $("#courseList tr td:nth-child(3)").map(function() {
-        return $(this).text();
-    });
+    var titles = scrubTitles(getTitles());
+    var flatArray = flattenArray(titles);
+    var scores = scores(flatArray);
+    var scoresOfImportantWords = removeUnnecessaryWords(scores);
 
-    titles = Array.prototype.slice.call(titles);
+    graph(scoresOfImportantWords);
 
-    var words = titles.map(function (value) {
-        return value.toLowerCase().match(/([a-z]+)/g);
-    });
 
-    var wordsFlat = words.reduce(function (previous, current) {
-        return previous.concat(current);
-    });
+    function getTitles() {
+        var titles = $("#courseList tr td:nth-child(3)").map(function() {
+            return $(this).text();
+        });
+        return Array.prototype.slice.call(titles);
+    }
 
-    var scores = wordsFlat.reduce(function (previous, current) {
-        console.log(this);
+    function scrubTitles(titles){
+        var words = titles.map(function (value) {
+            return value.toLowerCase().match(/([a-z]+)/g);
+        });
+        return words;
+    }
 
-        if (current in previous) {
-            previous[current] +=1;
-        } else {
-            previous[current] = 1;
-        }
-        return previous;
-    }, {});
+    function flattenArray(words){
+        var wordsFlat = words.reduce(function (previous, current) {
+            return previous.concat(current);
+        });
+        return wordsFlat;
+    }
 
-    graph();
+    function scores(wordsFlat){
+        var scores = wordsFlat.reduce(function (previous, current) {
+            if (current in previous) {
+                previous[current] +=1;
+            } else {
+                previous[current] = 1;
+            }
+            return previous;
+        }, {});
+        return scores;
+    }
 
-    function graph(){
+    function removeUnnecessaryWords(scores) {
+        var wordsToBeRemoved = ['and', 'the', 'through', 'to', 'this', 't', 'of', 'on', 'l', 'la', 'k', 'it', 'its', 'is', 'in', 'for'];
+        wordsToBeRemoved.forEach(function (element)  {
+           delete scores[element];
+        });
+        return scores;
+    }
+
+    function graph(scores){
 
         // clean up
         document.getElementById('target').innerHTML = '';
@@ -42,15 +64,15 @@ $(document).ready(function(){
 
         var padding = 6,
             radius = d3.scale.log().range([15, 70]).domain([2, 82]),
-            color = d3.scale.category10().domain([0, 15]);
+            color = d3.scale.category20c().domain([0, 15]);
 
         var nodes = [];
         var circle = [];
         var force;
 
         var svg = d3.select("div[id=target]").append("svg")
-            .attr("width", 1920)
-            .attr("height", 960)
+            .attr("width", 960)
+            .attr("height", 480)
             .attr("class", "vis")
             .append("g")
 
