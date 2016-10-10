@@ -1,4 +1,4 @@
-function graph(){
+function graph(scores){
 
     // clean up
     document.getElementById('target').innerHTML = '';
@@ -12,15 +12,15 @@ function graph(){
 
     var padding = 6,
         radius = d3.scale.log().range([15, 70]).domain([2, 82]),
-        color = d3.scale.category10().domain([0, 15]);
+        color = d3.scale.category20c().domain([0, 20]);
 
     var nodes = [];
     var circle = [];
     var force;
 
     var svg = d3.select("div[id=target]").append("svg")
-        .attr("width", 1920)
-        .attr("height", 960)
+        .attr("width", 960)
+        .attr("height", 480)
         .attr("class", "vis")
       .append("g")
 

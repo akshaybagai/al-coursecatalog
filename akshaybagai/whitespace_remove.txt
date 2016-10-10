@@ -1,1 +1,1 @@
- html-minifier no_whitespace.html --collapse-whitespace --minify-js --minify-css -o no_whitespaceprinceton.html
+ html-minifier no_whitespace.html --collapse-whitespace --minify-js --minify-css -o no_whitespace.html

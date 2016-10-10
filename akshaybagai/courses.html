@@ -1,20 +1,94 @@
 <!DOCTYPE html>
 <html>
 <script src="http://d3js.org/d3.v3.min.js"></script>
-<script   src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
 <script src="mitcourses_graph.js"></script>
 <script src="d3.tip.js"></script>
 <script src="data.js"></script>
-<!--<script src="mitcourses_graph.js"></script>-->
 <link rel="stylesheet" href="styles-example.css">
 <body>
+<h2>Akshay Bagai</h2>
 <h2>Princeton University Courses</h2>
-<h3>Graph with a)Color as per length of word b)Size of circle proportional to number of word occurrence in course catalog</h3>
+<h3>Graph with a)Color as per length of word b)Size of circle proportional to number of word occurrence in course
+    catalog</h3>
 <div id="target"></div>
 </body>
 <script>
+    $(document).ready(function () {
+
+        addHtmlToPage(data);
+        var courseNodeList = getTitles(nodeListToArray(getCourseNodeList()));
+        var titles = scrubTitles(courseNodeList);
+        var flatArray = flattenArray(titles);
+        var scoredList = scores(flatArray);
+        var scoresOfImportantWords = removeUnnecessaryWords(scoredList);
+        graph(scoresOfImportantWords);
+
+        // add html to page
+        function addHtmlToPage(htmlString){
+            var target = document.getElementById('target');
+            target.innerHTML = htmlString;
+            return target;
+        }
+
+        // nodelist of course items
+        function getCourseNodeList(tag){
+            var titles = $("#courseList tr td:nth-child(3)").map(function () {
+                return $(this).text();
+            });
+            return titles;
+        }
+
+        // convert from NodeList to array
+        function nodeListToArray(titles){
+            return Array.prototype.slice.call(titles);
+        }
+
+        // pass in array of courses
+        // return course titles
+        function getTitles(list){
+            return list;
+        }
+
+        // pass in course titles
+        // return words
+        // filter out punctuation/numbers, make words array
+        function scrubTitles(titles) {
+            var words = titles.map(function (value) {
+                return value.toLowerCase().match(/([a-z]+)/g);
+            });
+            return words;
+        }
+
+        function flattenArray(words) {
+            var wordsFlat = words.reduce(function (previous, current) {
+                return previous.concat(current);
+            });
+            return wordsFlat;
+        }
+
+        function scores(wordsFlat) {
+            var scoreList = wordsFlat.reduce(function (previous, current) {
+                if (current in previous) {
+                    previous[current] += 1;
+                } else {
+                    previous[current] = 1;
+                }
+                return previous;
+            }, {});
+            return scoreList;
+        }
+
+        function removeUnnecessaryWords(scores) {
+            var wordsToBeRemoved = ['and', 'the', 'through', 'to', 'this', 't', 'of', 'on', 'l', 'la', 'k', 'it', 'its', 'is', 'in', 'for'];
+            wordsToBeRemoved.forEach(function (element) {
+                delete scores[element];
+            });
+            return scores;
+        }
+    });
 
 </script>
-<script src="data-manipulation.js"></script>
 
 </html>

@@ -1,0 +1,4 @@
+#1 Removed the single quotes - screen shot attached remove-single-quote.png
+#2 Tried multiple things to clean and extract data. But ended up taking a straight forward approach.
+    a. Identified the data table.
+    b. Assigned an attribute id=courseList to the html table tag (<table id="courseList">). This helped to parse the data easily.
